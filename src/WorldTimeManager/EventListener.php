@@ -17,9 +17,9 @@ use pocketmine\item\Item;
 
 class EventListener implements Listener
 {
-  
+
   protected $plugin;
-  
+
   public function __construct(WorldTimeManager $plugin)
   {
     $this->plugin = $plugin;
@@ -39,7 +39,7 @@ class EventListener implements Listener
     $packet = $event->getPacket();
     $player = $event->getPlayer();
     $name = $player->getName();
-    $tag = "§l§b[나침반] §r§7";
+    $tag = "§l§6[ §f월드설정 §6] §r§7";
     if ($packet instanceof ModalFormResponsePacket) {
       $id = $packet->formId;
       $data = json_decode($packet->formData, true);
@@ -152,7 +152,7 @@ class EventListener implements Listener
       'content' => [
         [
           'type' => 'input',
-          'text' => "§r§7{$worldname}설정 할 월드 시간을 적어주세요."
+          'text' => "§r§7설정 할 {$worldname} 월드 시간을 적어주세요."
         ]
       ]
     ];
