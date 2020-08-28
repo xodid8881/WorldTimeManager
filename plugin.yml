@@ -1,0 +1,5 @@
+name: WorldTimeManager
+author: HWABAEG
+main: WorldTimeManager\WorldTimeManager
+version: B1
+api: [3.0.0]
