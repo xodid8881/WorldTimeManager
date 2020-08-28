@@ -8,6 +8,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use WorldTimeManager\Commands\MainCommand;
 use pocketmine\scheduler\Task;
+use pocketmine\level\Level;
 
 class WorldTimeManager extends PluginBase
 {
@@ -27,7 +28,11 @@ class WorldTimeManager extends PluginBase
   {
     $this->player = new Config ($this->getDataFolder() . "players.yml", Config::YAML);
     $this->pldb = $this->player->getAll();
-    $this->world = new Config ($this->getDataFolder() . "worlds.yml", Config::YAML);
+    $this->world = new Config ($this->getDataFolder() . "worlds.yml", Config::YAML,
+    [
+      "levels" => [ ]
+      ]
+    );
     $this->worlddb = $this->world->getAll();
     $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
     $this->getServer()->getCommandMap()->register('WorldTimeManager', new MainCommand($this));
@@ -36,7 +41,7 @@ class WorldTimeManager extends PluginBase
   public function getWorldLists() : array{
     /* 월드이름 Ui 버튼으로 불러오기 */
     $arr = [];
-    foreach($this->worlddb as $World => $v){
+    foreach($this->worlddb ["levels"] as $World => $v){
       array_push($arr, $World);
     }
     return $arr;
@@ -48,10 +53,10 @@ class WorldTimeManager extends PluginBase
   public function SetWorldTime()
   {
     /* 월드 저장파일을 확인하고 타임을 설정 */
-    foreach($this->worlddb as $WorldName => $v){
-      if (isset($this->getServer->getLevel()->getFolderName ($WorldName))){
-        $world = $this->getServer->getLevel()->getFolderName ($WorldName);
-        $worldTime = (int)$this->worlddb [$world] ["Time"];
+    foreach($this->worlddb ["levels"] as $WorldName => $v){
+      if ($this->getServer ()->getLevelByName ( $WorldName ) instanceof Level) {
+        $world = $this->getServer ()->getLevelByName($WorldName);
+        $worldTime = (int)$this->worlddb ["levels"] [$WorldName] ["Time"];
         $world->setTime ($worldTime);
       }
     }
